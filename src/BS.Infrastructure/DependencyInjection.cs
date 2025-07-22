@@ -1,9 +1,14 @@
+using System.Text;
+using BS.Application.Interfaces;
 using BS.Domain.Entities;
 using BS.Infrastructure.Data;
+using BS.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BS.Infrastructure;
 
@@ -29,6 +34,41 @@ public static class DependencyInjection
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
+        
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero,
+                
+                    ValidIssuer = configuration["JwtSettings:Issuer"],
+                    ValidAudience = configuration["JwtSettings:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]))
+                };
+            });
+        
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RequireAdminRole", 
+                policy => policy.RequireRole("Admin"));
+            options.AddPolicy("RequireModeratorRole", 
+                policy => policy.RequireRole("Moderator"));
+        });
+
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         
         return services;
     }
