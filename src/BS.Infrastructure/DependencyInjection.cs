@@ -2,6 +2,7 @@ using System.Text;
 using BS.Application.Interfaces;
 using BS.Domain.Entities;
 using BS.Infrastructure.Data;
+using BS.Infrastructure.Data.Repositories;
 using BS.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -69,6 +70,7 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         
         return services;
     }

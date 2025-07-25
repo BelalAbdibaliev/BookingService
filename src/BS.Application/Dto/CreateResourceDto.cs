@@ -1,9 +1,7 @@
-namespace BS.Domain.Entities;
+namespace BS.Application.Dto;
 
-public class Resource: BaseEntity
+public class CreateResourceDto
 {
-    public int Id { get; set; }
-    
     public string Name { get; set; }
     public string Description { get; set; }
     public int Capacity { get; set; }

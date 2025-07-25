@@ -7,8 +7,8 @@ services:
       dockerfile: src/BS.API/Dockerfile
     container_name: bs.api
     ports:
-      - "8080:8080"
-      - "8081:8081"
+      - "8088:8080"
+      - "8089:8081"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=bs.db;Port=5432;Database=bs_db;Username=bs_user;Password=bs_password
@@ -23,7 +23,7 @@ services:
       POSTGRES_USER: bs_user
       POSTGRES_PASSWORD: bs_password
     ports:
-      - "5432:5432"
+      - "15432:5432"
     volumes:
       - bs_postgres_data:/var/lib/postgresql/data
 

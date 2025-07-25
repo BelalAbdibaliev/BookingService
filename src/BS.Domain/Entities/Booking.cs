@@ -2,7 +2,7 @@ using BS.Domain.Enums;
 
 namespace BS.Domain.Entities;
 
-public class Booking
+public class Booking: BaseEntity
 {
     public int Id { get; set; }
     
