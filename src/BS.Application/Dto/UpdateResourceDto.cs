@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BS.Application.Dto;
 
 public class UpdateResourceDto
 {
+    [Required]
     public int Id { get; set; }
     
     public string? Name { get; set; }

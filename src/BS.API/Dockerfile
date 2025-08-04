@@ -19,6 +19,8 @@ RUN dotnet build "./BS.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./BS.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+COPY src/BS.API/appsettings*.json /app/publish/
+
 
 FROM base AS final
 WORKDIR /app
