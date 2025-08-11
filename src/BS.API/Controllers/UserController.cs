@@ -1,4 +1,4 @@
-using BS.API.Dto;
+using BS.Application.Dto;
 using BS.Application.Interfaces;
 using BS.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -10,27 +10,25 @@ namespace BS.API.Controllers;
 [Route("api/[controller]/")]
 public class UserController: Controller
 {
-    private IJwtTokenGenerator jwtTokenGenerator;
+    private IUserService _userService;
     
-    public UserController(IJwtTokenGenerator  jwtTokenGenerator)
+    public UserController(IUserService  userService)
     {
-        this.jwtTokenGenerator = jwtTokenGenerator;
+        _userService = userService;
     }
     
-    [HttpGet("login")]
-    public async Task<IActionResult> LogIn()
+    [HttpPost("login")]
+    public async Task<IActionResult> LogIn([FromBody] LoginDto dto)
     {
-        var token = jwtTokenGenerator.GenerateToken(new User()
-        {
-            Id = Guid.NewGuid().ToString(),
-            UserName = "xddd",
-            Email = "xdddddddd@gmail.com"
-        }, new List<string>()
-        {
-            "USER",
-            "ADMIN"
-        });
-        return Ok(token);
+        if(!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
+        var token = await _userService.LoginAsync(dto);
+        
+        if(token != null)
+            return Ok(token);
+        
+        return Unauthorized();
     }
 
     [Authorize]
@@ -43,6 +41,14 @@ public class UserController: Controller
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
     {
-        return Ok();
+        if(!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
+        var token = await _userService.RegisterAsync(dto);
+        
+        if(token != null)
+            return Ok(token);
+        
+        return Unauthorized();
     }
 }

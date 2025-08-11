@@ -4,5 +4,5 @@ namespace BS.Application.Interfaces;
 
 public interface IJwtTokenGenerator
 {
-    string GenerateToken(User user, IList<string> roles);
+    Task<string> GenerateTokenAsync(User user);
 }

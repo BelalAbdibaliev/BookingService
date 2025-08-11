@@ -38,7 +38,7 @@ public class ResourceController: Controller
         return NotFound();
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] CreateResourceDto resource)
     {

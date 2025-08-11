@@ -23,8 +23,10 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _logger = logger;
     }
 
-    public string GenerateToken(User user, IList<string> roles)
+    public async Task<string> GenerateTokenAsync(User user)
     {
+        var roles = await _userManager.GetRolesAsync(user);
+
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),

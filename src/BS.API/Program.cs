@@ -1,5 +1,7 @@
 using BS.Application.Configurations;
 using BS.Infrastructure;
+using BS.Infrastructure.Services;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,17 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    await DataSeeder.SeedRolesAsync(roleManager);
+    
+    // Если нужно сидировать пользователей:
+    // var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    // await IdentityDataSeeder.SeedDefaultAdminAsync(userManager);
+}
+
 
 app.UseHttpsRedirection();
 
