@@ -72,6 +72,15 @@ public static class DependencyInjection
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IAuthService, AuthService>();
+        services.AddTransient<IEmailSender>(sp =>
+            new SmtpEmailSender(
+                smtpServer: "smtp.gmail.com",
+                smtpPort: 587,
+                fromEmail: "",
+                password: ""
+            )
+        );
+
         
         return services;
     }
