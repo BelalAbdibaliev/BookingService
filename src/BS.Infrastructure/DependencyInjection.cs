@@ -4,6 +4,7 @@ using BS.Domain.Entities;
 using BS.Infrastructure.Data;
 using BS.Infrastructure.Data.Repositories;
 using BS.Infrastructure.Services;
+using BS.Infrastructure.Workers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -80,7 +81,8 @@ public static class DependencyInjection
                 password: ""
             )
         );
-
+        services.AddScoped<IUnconfirmedUserCleanup, UnconfirmedUserCleanup>();
+        services.AddHostedService<UnconfirmedUserCleanupWorker>();
         
         return services;
     }
