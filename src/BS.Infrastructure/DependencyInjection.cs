@@ -89,6 +89,7 @@ public static class DependencyInjection
         );
         services.AddScoped<IUnconfirmedUserCleanup, UnconfirmedUserCleanup>();
         services.AddHostedService<UnconfirmedUserCleanupWorker>();
+        services.AddScoped<IBookingRepository, BookingRepository>();
         
         host.UseSerilog((ctx, lc) =>
         {
@@ -100,8 +101,6 @@ public static class DependencyInjection
                     restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error
                 );
         });
-
-
         
         return services;
     }

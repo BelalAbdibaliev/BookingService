@@ -10,5 +10,7 @@ public class AutoMappingProfile: Profile
     {
         CreateMap<CreateResourceDto, Resource>();
         CreateMap<RegisterUserDto, User>();
+        CreateMap<BookingDto, Booking>();
+        CreateMap<Booking, BookingDto>();
     }
 }
