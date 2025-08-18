@@ -2,6 +2,7 @@ using AutoMapper;
 using BS.Application.Dto;
 using BS.Application.Interfaces;
 using BS.Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BS.Application.Services;
 
@@ -9,13 +10,16 @@ public class ResourceService: IResourceService
 {
     private readonly IRepository<Resource> _repository;
     private readonly IMapper _mapper;
+    private readonly ILogger<ResourceService> _logger;
 
     public ResourceService(
         IRepository<Resource> repository,
-        IMapper mapper)
+        IMapper mapper,
+        ILogger<ResourceService> logger)
     {
         _repository = repository;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Resource?> FindAsync(int id)

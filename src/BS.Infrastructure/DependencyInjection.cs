@@ -10,13 +10,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Sinks.TelegramBot;
 
 namespace BS.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IHostBuilder host)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
         {
@@ -83,6 +89,19 @@ public static class DependencyInjection
         );
         services.AddScoped<IUnconfirmedUserCleanup, UnconfirmedUserCleanup>();
         services.AddHostedService<UnconfirmedUserCleanupWorker>();
+        
+        host.UseSerilog((ctx, lc) =>
+        {
+            lc.WriteTo.File("../../logs/log-.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.Console()
+                .WriteTo.TelegramBot(
+                    token: configuration["Logging:Telegram:BotToken"],
+                    chatId: configuration["Logging:Telegram:ChatId"],
+                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error
+                );
+        });
+
+
         
         return services;
     }

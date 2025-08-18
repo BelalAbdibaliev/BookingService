@@ -40,7 +40,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddControllers();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration, builder.Host);
 builder.Services.AddApplication();
 
 
