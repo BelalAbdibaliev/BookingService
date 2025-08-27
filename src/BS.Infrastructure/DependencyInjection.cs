@@ -3,6 +3,7 @@ using BS.Application.Interfaces;
 using BS.Domain.Entities;
 using BS.Infrastructure.Data;
 using BS.Infrastructure.Data.Repositories;
+using BS.Infrastructure.Middlewares;
 using BS.Infrastructure.Services;
 using BS.Infrastructure.Workers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -90,6 +91,8 @@ public static class DependencyInjection
         services.AddScoped<IUnconfirmedUserCleanup, UnconfirmedUserCleanup>();
         services.AddHostedService<UnconfirmedUserCleanupWorker>();
         services.AddScoped<IBookingRepository, BookingRepository>();
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
         
         host.UseSerilog((ctx, lc) =>
         {

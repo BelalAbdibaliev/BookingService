@@ -62,7 +62,7 @@ using (var scope = app.Services.CreateScope())
     // var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     // await IdentityDataSeeder.SeedDefaultAdminAsync(userManager);
 }
-
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
