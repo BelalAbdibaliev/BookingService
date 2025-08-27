@@ -1,5 +1,6 @@
 using BS.Application.Configurations;
 using BS.Infrastructure;
+using BS.Infrastructure.Data;
 using BS.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 
@@ -56,8 +57,11 @@ if (app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     await DataSeeder.SeedRolesAsync(roleManager);
-    
+    await DataSeeder.SeedResource(dbContext);
+    await DataSeeder.SeedSpot(dbContext);
+
     // Если нужно сидировать пользователей:
     // var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     // await IdentityDataSeeder.SeedDefaultAdminAsync(userManager);
