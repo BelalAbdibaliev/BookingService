@@ -8,7 +8,8 @@ using Microsoft.Extensions.Logging;
 public class BookingService : IBookingService
 {
     private readonly IRepository<Booking> _repository;
-    private readonly IRepository<Spot> _spotRepository;
+    private readonly IRepository<Spot> _spotGenericRepository;
+    private readonly ISpotRepository _spotRepository;
     private readonly UserManager<User> _userManager;
     private readonly ILogger<BookingService> _logger;
     private readonly IMapper _mapper;
@@ -19,15 +20,17 @@ public class BookingService : IBookingService
         ILogger<BookingService> logger,
         IMapper mapper,
         UserManager<User> userManager,
-        IRepository<Spot> spotRepository,
-        IBookingRepository bookingRepository)
+        IRepository<Spot> spotGenericRepository,
+        IBookingRepository bookingRepository,
+        ISpotRepository spotRepository)
     {
         _repository = repository;
         _logger = logger;
         _mapper = mapper;
         _userManager = userManager;
-        _spotRepository = spotRepository;
+        _spotGenericRepository = spotGenericRepository;
         _bookingRepository = bookingRepository;
+        _spotRepository = spotRepository;
     }
 
     public async Task Book(BookingDto dto)
@@ -36,7 +39,11 @@ public class BookingService : IBookingService
             throw new ArgumentNullException(nameof(dto));
 
         var user = await _userManager.FindByIdAsync(dto.UserId);
-        var spot = await _spotRepository.GetById(dto.SpotId);
+        var spot = await _spotRepository
+            .GetByIdWithResourceAsync(dto.SpotId);
+
+        if (spot == null)
+            throw new InvalidOperationException("Spot not found");
 
         if (user == null || spot == null)
         {

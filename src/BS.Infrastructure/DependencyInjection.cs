@@ -93,6 +93,7 @@ public static class DependencyInjection
         services.AddScoped<IBookingRepository, BookingRepository>();
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
+        services.AddScoped<ISpotRepository, SpotRepository>();
         
         host.UseSerilog((ctx, lc) =>
         {
