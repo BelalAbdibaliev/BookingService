@@ -5,12 +5,10 @@ using BS.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
-namespace BS.Application.Services;
-
-public class BookingService: IBookingService
+public class BookingService : IBookingService
 {
     private readonly IRepository<Booking> _repository;
-    private readonly IRepository<Resource> _resourceRepository;
+    private readonly IRepository<Spot> _spotRepository;
     private readonly UserManager<User> _userManager;
     private readonly ILogger<BookingService> _logger;
     private readonly IMapper _mapper;
@@ -21,74 +19,56 @@ public class BookingService: IBookingService
         ILogger<BookingService> logger,
         IMapper mapper,
         UserManager<User> userManager,
-        IRepository<Resource> resourceRepository,
+        IRepository<Spot> spotRepository,
         IBookingRepository bookingRepository)
     {
         _repository = repository;
         _logger = logger;
         _mapper = mapper;
         _userManager = userManager;
-        _resourceRepository = resourceRepository;
-        _bookingRepository =  bookingRepository;
+        _spotRepository = spotRepository;
+        _bookingRepository = bookingRepository;
     }
-    
+
     public async Task Book(BookingDto dto)
     {
-        if(dto is  null)
+        if (dto is null)
             throw new ArgumentNullException(nameof(dto));
-        
-        var user = await _userManager.FindByIdAsync(dto.UserId);
-        var resource = await _resourceRepository.GetById(dto.ResourceId);
-        
-        if(user == null || resource == null)
-        {
-            _logger.LogError($"User {user.UserName} not found");
-            throw new InvalidOperationException(nameof(dto.UserId));
-        }
-        
-        var bookingModel = _mapper.Map<Booking>(dto);
-        
-        bookingModel.Resource = resource;
-        bookingModel.User = user;
 
-        try
+        var user = await _userManager.FindByIdAsync(dto.UserId);
+        var spot = await _spotRepository.GetById(dto.SpotId);
+
+        if (user == null || spot == null)
         {
-            await _repository.Create(bookingModel);
-            await _repository.SaveChangesAsync();
+            _logger.LogError("User {UserId} or Spot {SpotId} not found", dto.UserId, dto.SpotId);
+            throw new InvalidOperationException("User or Spot not found");
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message);
-            throw;
-        }
+
+        var alreadyBooked = await _bookingRepository.ExistsActiveBookingAsync(spot.Id);
+        if (alreadyBooked)
+            throw new InvalidOperationException("This place is already booked.");
+
+        var booking = Booking.Create(spot, user.Id);
+
+        await _repository.Create(booking);
+        await _repository.SaveChangesAsync();
     }
 
     public async Task<BookingDto?> FindBookingById(int id)
     {
         var booking = await _repository.GetById(id);
-        
-        var bookingDto = _mapper.Map<BookingDto>(booking);
-        
-        return bookingDto;
+        return _mapper.Map<BookingDto>(booking);
     }
 
     public async Task<List<BookingDto>?> FindBookingByUserId(string id)
     {
         var booking = await _bookingRepository.GetByUserId(id);
-        
         return _mapper.Map<List<BookingDto>>(booking);
     }
 
     public async Task DeleteBooking(int id)
     {
-        try
-        {
-            await _repository.Delete(id);
-            await _repository.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, ex.Message);
-        }
+        await _repository.Delete(id);
+        await _repository.SaveChangesAsync();
     }
 }

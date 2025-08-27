@@ -20,4 +20,9 @@ public class BookingRepository:  IBookingRepository
             .Where(u => u.UserId == id)
             .ToListAsync();
     }
+
+    public async Task<bool> ExistsActiveBookingAsync(int spotId)
+    {
+        return await _context.Bookings.AnyAsync(b => b.SpotId == spotId &&  b.Status == BookingStatus.Active);
+    }
 }
