@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BS.Infrastructure.Middlewares;
 
-public class GlobalExceptionHandler: IExceptionHandler
+public class GlobalExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<GlobalExceptionHandler> _logger;
 
@@ -23,10 +23,18 @@ public class GlobalExceptionHandler: IExceptionHandler
 
         var problemDetails = new ProblemDetails
         {
-            Status = StatusCodes.Status500InternalServerError,
-            Title = "Ошибка сервера",
+            Title = "Ошибка",
             Detail = exception.Message,
             Instance = httpContext.Request.Path
+        };
+
+        // 👇 Маппим разные исключения на разные статусы
+        problemDetails.Status = exception switch
+        {
+            ArgumentNullException        => StatusCodes.Status400BadRequest,
+            InvalidOperationException    => StatusCodes.Status400BadRequest,
+            KeyNotFoundException         => StatusCodes.Status404NotFound,
+            _                            => StatusCodes.Status500InternalServerError
         };
 
         httpContext.Response.StatusCode = problemDetails.Status.Value;
@@ -36,5 +44,4 @@ public class GlobalExceptionHandler: IExceptionHandler
 
         return true;
     }
-
 }
