@@ -1,3 +1,4 @@
+using System.Text.Json;
 using BS.Application.Configurations;
 using BS.Infrastructure;
 using BS.Infrastructure.Data;
@@ -40,10 +41,24 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 builder.Services.AddInfrastructure(builder.Configuration, builder.Host);
 builder.Services.AddApplication();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -67,6 +82,7 @@ using (var scope = app.Services.CreateScope())
     // await IdentityDataSeeder.SeedDefaultAdminAsync(userManager);
 }
 app.UseExceptionHandler();
+app.UseCors();
 
 app.UseHttpsRedirection();
 

@@ -10,4 +10,5 @@ public interface IUserService
     Task LogoutAsync();
     Task<bool> ConfirmEmailAsync(string userId, string token);
     Task<bool> ResendConfirmationEmailAsync(string email);
+    Task<User?> GetUserByEmailAsync(string email);
 }

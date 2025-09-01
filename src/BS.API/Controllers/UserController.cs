@@ -23,9 +23,10 @@ public class UserController : Controller
             return BadRequest(ModelState);
 
         var token = await _userService.LoginAsync(dto);
+        var user = _userService.GetUserByEmailAsync(dto.Email);
         if (token != null)
-            return Ok(token);
-
+            return Ok(new {token, user});
+        
         return Unauthorized("Неверные данные или email не подтвержден.");
     }
 

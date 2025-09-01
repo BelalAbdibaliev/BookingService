@@ -108,4 +108,9 @@ public class UserService : IUserService
 
         return true;
     }
+
+    public async Task<User?> GetUserByEmailAsync(string email)
+    {
+        return await _userManager.FindByEmailAsync(email) ?? null;
+    }
 }

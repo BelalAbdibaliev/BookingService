@@ -12,5 +12,7 @@ public class AutoMappingProfile: Profile
         CreateMap<RegisterUserDto, User>();
         CreateMap<BookingDto, Booking>();
         CreateMap<Booking, BookingDto>();
+        CreateMap<SpotDto, Spot>();
+        CreateMap<Spot, SpotDto>();
     }
 }

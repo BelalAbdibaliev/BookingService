@@ -9,4 +9,6 @@ public class BookingDto
     public int SpotId { get; set; }
     public DateTime CreatedAt { get; set; }
     public BookingStatus Status { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
 }

@@ -11,11 +11,13 @@ public class Booking : BaseEntity
     public User User { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
+    public DateTime StartTime { get; private set; }
+    public DateTime EndTime { get; private set; }
     public BookingStatus Status { get; private set; }
 
     private Booking() { }
 
-    private Booking(Spot spot, string userId)
+    private Booking(Spot spot, string userId, DateTime start, DateTime end)
     {
         if (spot == null)
             throw new ArgumentNullException(nameof(spot));
@@ -27,11 +29,13 @@ public class Booking : BaseEntity
         UserId = userId;
         CreatedAt = DateTime.UtcNow;
         Status = BookingStatus.Active;
+        StartTime = start;
+        EndTime = end;
     }
 
-    public static Booking Create(Spot spot, string userId)
+    public static Booking Create(Spot spot, string userId, DateTime start, DateTime end)
     {
-        return new Booking(spot, userId);
+        return new Booking(spot, userId,  start, end);
     }
 
     public void Cancel()

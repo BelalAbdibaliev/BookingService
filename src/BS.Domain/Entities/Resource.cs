@@ -34,6 +34,8 @@ public class Resource: BaseEntity
 
         var spot = new Spot(number, price, Id);
         _spots.Add(spot);
+        
+        spot.IsActive = true;
 
         return spot;
     }

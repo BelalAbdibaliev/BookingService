@@ -27,7 +27,6 @@ public class ResourceController: Controller
         
         return NotFound();
     }
-
     [HttpGet("getalll")]
     public async Task<IActionResult> GetAll()
     {
