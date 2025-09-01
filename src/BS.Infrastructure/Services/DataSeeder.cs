@@ -32,7 +32,7 @@ public static class DataSeeder
 
             for (int i = 1; i <= resource.Capacity; i++)
             {
-                var spot = resource.AddSpot(i.ToString(), 0);
+                var spot = resource.AddSpot(i.ToString(), 100, 8);
                 dbContext.Spots.Add(spot);
             }
         }

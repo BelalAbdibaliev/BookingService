@@ -7,16 +7,18 @@ public class Spot: BaseEntity
     public decimal Price { get; private set; } 
     public bool IsActive { get; set; }
     public int ResourceId { get; private set; }
+    public int Capacity {get; private set;}
     public Resource Resource { get; private set; }
 
     private Spot() { }
 
-    internal Spot(string number, decimal price, int resourceId)
+    internal Spot(string number, decimal price, int resourceId,  int capacity)
     {
         Number = number;
         Price = price;
         ResourceId = resourceId;
         IsActive = true;
+        Capacity = capacity;
     }
 
 }

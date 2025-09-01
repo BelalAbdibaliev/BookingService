@@ -24,7 +24,7 @@ public class Resource: BaseEntity
         IsActive = isActive;
     }
 
-    public Spot AddSpot(string number, decimal price)
+    public Spot AddSpot(string number, decimal price, int capacity)
     {
         if (_spots.Count >= Capacity)
             throw new InvalidOperationException("Reached maximum number of spots");
@@ -32,7 +32,7 @@ public class Resource: BaseEntity
         if (int.TryParse(number, out var num) && num > Capacity)
             throw new ArgumentException("Number of spot is greater than maximum number of spots");
 
-        var spot = new Spot(number, price, Id);
+        var spot = new Spot(number, price, Id, capacity);
         _spots.Add(spot);
         
         spot.IsActive = true;
