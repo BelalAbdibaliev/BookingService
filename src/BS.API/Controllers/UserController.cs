@@ -23,7 +23,7 @@ public class UserController : Controller
             return BadRequest(ModelState);
 
         var token = await _userService.LoginAsync(dto);
-        var user = _userService.GetUserByEmailAsync(dto.Email);
+        var user = await _userService.GetUserByEmailAsync(dto.Email);
         if (token != null)
             return Ok(new {token, user});
         
