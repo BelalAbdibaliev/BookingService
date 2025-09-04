@@ -17,7 +17,7 @@ public class BookingController: Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Book([FromBody] BookingDto booking)
+    public async Task<IActionResult> Book([FromBody] CreateBookingDto booking)
     {
         if(!ModelState.IsValid)
             return BadRequest(ModelState);

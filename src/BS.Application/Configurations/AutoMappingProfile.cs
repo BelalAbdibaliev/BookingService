@@ -11,6 +11,7 @@ public class AutoMappingProfile: Profile
         CreateMap<CreateResourceDto, Resource>();
         CreateMap<RegisterUserDto, User>();
         CreateMap<BookingDto, Booking>();
+        CreateMap<CreateBookingDto, Booking>();
         CreateMap<Booking, BookingDto>();
         CreateMap<SpotDto, Spot>();
         CreateMap<Spot, SpotDto>();

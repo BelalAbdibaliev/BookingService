@@ -33,7 +33,7 @@ public class BookingService : IBookingService
         _spotRepository = spotRepository;
     }
 
-    public async Task BookAsync(BookingDto dto)
+    public async Task BookAsync(CreateBookingDto dto)
     {
         if (dto is null)
             throw new ArgumentNullException(nameof(dto));
