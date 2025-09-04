@@ -84,6 +84,9 @@ public class BookingService : IBookingService
         if (booking is null)
             throw new NullReferenceException("Booking not found");
         
+        var spot = await _spotGenericRepository.GetById(booking.SpotId);
+        spot.IsActive = true;
+        
         await _repository.Delete(id);
         await _repository.SaveChangesAsync();
     }
