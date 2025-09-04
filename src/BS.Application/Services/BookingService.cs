@@ -56,6 +56,9 @@ public class BookingService : IBookingService
             throw new InvalidOperationException("This place is already booked.");
 
         var booking = Booking.Create(spot, user.Id, dto.StartTime, dto.EndTime);
+        
+        spot.IsActive = false;
+        await _spotGenericRepository.SaveChangesAsync();
 
         await _repository.Create(booking);
         await _repository.SaveChangesAsync();
