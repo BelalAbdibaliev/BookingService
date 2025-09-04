@@ -22,7 +22,7 @@ public class BookingController: Controller
         if(!ModelState.IsValid)
             return BadRequest(ModelState);
         
-        await _bookingService.Book(booking);
+        await _bookingService.BookAsync(booking);
         return Ok();
     }
 

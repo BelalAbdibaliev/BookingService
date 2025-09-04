@@ -52,5 +52,4 @@ public enum BookingStatus
     Active,
     Completed,
     Canceled,
-    Pending
 }

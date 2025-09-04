@@ -1,10 +1,10 @@
 using BS.Domain.Entities;
-using BS.Domain.Enums;
 
 namespace BS.Application.Dto;
 
 public class BookingDto
 {
+    public int Id { get; set; }
     public string UserId { get; set; }
     public int SpotId { get; set; }
     public DateTime CreatedAt { get; set; }
